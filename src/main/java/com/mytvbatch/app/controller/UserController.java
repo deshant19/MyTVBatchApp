@@ -1,5 +1,7 @@
 package com.mytvbatch.app.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/user")
 public class UserController {
 	
+	private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
+	
 	private static final String fiveMinCronJob = "0 */1 * ? * *";
 	
 	@Autowired
@@ -34,7 +38,9 @@ public class UserController {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("JobID", System.currentTimeMillis()).toJobParameters();
         try {
+        	LOGGER.info("Job started.");
             jobLauncher.run(job, jobParameters);
+            LOGGER.info("Job ended.");
             return new ResponseEntity<String>("Job Executed!!", HttpStatus.OK);
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
         	return new ResponseEntity<String>("Job Failed!!", HttpStatus.EXPECTATION_FAILED);

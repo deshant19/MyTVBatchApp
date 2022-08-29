@@ -1,5 +1,7 @@
 package com.mytvbatch.app.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -43,15 +45,20 @@ public class SpringBatchConfig {
     private UserRepository userRepository;
     
     private Resource outputResource = new FileSystemResource(outputFilePath);
+    
+    private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
 
     @Bean
     public FlatFileItemReader<User> readFromCSV() {
+    	LOGGER.info("FlatFileItemReader method started.");
         FlatFileItemReader<User> itemReader = new FlatFileItemReader<>();
         itemReader.setResource(new FileSystemResource(inputFilePath));
         itemReader.setName("csvReader");
         itemReader.setLinesToSkip(1);
         itemReader.setLineMapper(lineMapper());
+        
+        LOGGER.info("FlatFileItemReader method executed.");
         return itemReader;
     }
 
@@ -80,14 +87,17 @@ public class SpringBatchConfig {
 
     @Bean
     public RepositoryItemWriter<User> writeToDB() {
+    	LOGGER.info("writeToDB method started.");
         RepositoryItemWriter<User> writer = new RepositoryItemWriter<>();
         writer.setRepository(userRepository);
         writer.setMethodName("save");
+        LOGGER.info("writeToDB method execited.");
         return writer;
     }
     
     @Bean
     public FlatFileItemWriter<User> writeDeltaToCSV() {
+      LOGGER.info("writeDeltaToCSV method started.");
       UserWriter writer = new UserWriter();
       
       writer.setResource(outputResource);
@@ -104,6 +114,8 @@ public class SpringBatchConfig {
           });
         }
       });
+      
+      LOGGER.info("writeDeltaToCSV method execited.");
       return writer;
     }
 
