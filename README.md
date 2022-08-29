@@ -1,14 +1,9 @@
 # MyTVBatchApp
 
-## Steps to run the database(MySQL)
-
-    Goto the root directory ./MyTVBatchApp
-    run command, docker-compose up -d --build (Make sure you have docker installed)
-    This is to bring up Mysql cluster at port 3307
-
 ## Steps to run the application
 
     Make sure you have Java 17 and maven installed.
+    Make sure you have Mysql instance up and running on port 3307 having schema name mysqldb
     Goto the root directory ./MyTVBatchApp
     Run, mvn clean package (It will build and package the application is necessary jars required to run the application)
     Goto target folder.
